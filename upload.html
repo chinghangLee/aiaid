@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload 3D Model</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Uploadcare widget -->
+  <script>
+    UPLOADCARE_PUBLIC_KEY = "demopublickey";
+  </script>
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+
+</head>
+
+<body>
+
+  <h1>Upload 3D Model</h1>
+  <p>支援檔案：GLB、USDZ、OBJ、PLY</p>
+
+  <input 
+    type="hidden" 
+    role="uploadcare-uploader"
+    data-public-key="demopublickey"
+    data-images-only="false"
+    data-multiple="false"
+    id="fileUploader"
+  />
+
+  <button id="openChooser">選擇或拖曳檔案</button>
+
+  <div id="result" style="margin-top:20px;"></div>
+
+  <script>
+    const widget = uploadcare.Widget('#fileUploader');
+    const openBtn = document.getElementById('openChooser');
+    const resultBox = document.getElementById('result');
+
+    openBtn.onclick = () => widget.openDialog();
+
+    widget.onUploadComplete(file => {
+      const url = file.cdnUrl;
+
+      resultBox.innerHTML = `
+        <p>模型已上傳成功</p>
+        <p><strong>URL：</strong><br>
+          <a href="${url}" target="_blank">${url}</a>
+        </p>
+
+        <button id="openAR">開啟 AR Viewer</button>
+      `;
+
+      document.getElementById('openAR').onclick = () => {
+        window.location.href = `viewer.html?src=${encodeURIComponent(url)}`;
+      };
+    });
+  </script>
+
+</body>
+</html>
